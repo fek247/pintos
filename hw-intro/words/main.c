@@ -94,10 +94,10 @@ int count_words(WordCount **wclist, FILE *infile)
 
     int ch;
     int index = 0;
-    char buffer[1024];
+    char buffer[MAX_WORD_LEN + 1];
     while ((ch = fgetc(infile)) != EOF) {
         if (isalpha(ch)) {
-            if (index < sizeof(buffer) - 1) {
+            if (index < MAX_WORD_LEN) {
                 buffer[index++] = (char)tolower(ch);
             }
         } else {
@@ -125,7 +125,11 @@ int count_words(WordCount **wclist, FILE *infile)
  */
 static bool wordcount_less(const WordCount *wc1, const WordCount *wc2)
 {
-    return 0;
+    if (wc1->count != wc2->count) {
+        return wc1->count < wc2->count;
+    }
+
+    return strcmp(wc1->word, wc2->word) < 0;
 }
 
 // In trying times, displays a helpful message.
